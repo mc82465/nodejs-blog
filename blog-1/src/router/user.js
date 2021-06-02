@@ -13,16 +13,21 @@ const handleUserRouter = (req, res) => {
     const url = req.url
     const path = url.split('?')[0];
     // 登录
-    if (method === 'POST' && path === '/api/user/login') {
-        const { username, password } = req.body;
+    if (method === 'GET' && path === '/api/user/login') {
+        //const { username, password } = req.body;
+        const { username, password } = req.query;
         const result = login(username,password)
-
         return result.then( data => {
             if(data.username){
 
-                //操作cookie
+                req.session.username = data.username;
+                req.session.realname = data.realname;
+
+                //操作cookie  用了session后，写在app.js中
                 //res.setHeader('Set-Cookie',`username=${data.username}; path=/; httpOnly; expires=${getCookieExpires}`)  //path=/  设置cookie适用根目录;httpOnly只允许服务端修改
 
+                // console.log('req session:')
+                // console.log(req.session)
 
                 return new SuccessModel()
             }else{
@@ -39,7 +44,7 @@ const handleUserRouter = (req, res) => {
 
         // 登录验证的测试
     if (method === 'GET' && req.path === '/api/user/login-test') {
-        if (req.cookie.username) {
+        if (req.session.username) {
             return Promise.resolve(
                 new SuccessModel({
                     session: req.session
