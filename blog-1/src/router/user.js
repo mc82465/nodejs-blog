@@ -1,7 +1,12 @@
 const { login } = require('../controller/user');
 const { SuccessModel,ErrorModel } = require('../model/resModel');
 
-
+//获取cookie过期时间
+const getCookieExpires = () => {
+    const d = new Date();
+    d.setTime(d.getTime() + (24*60*60*1000));
+    return d.toGMTString();
+}
 
 const handleUserRouter = (req, res) => {
     const method = req.method // GET POST
@@ -16,7 +21,7 @@ const handleUserRouter = (req, res) => {
             if(data.username){
 
                 //操作cookie
-                //res.setHeader('Set-Cookie',`username=${data.username};path=/;httpOnly`)  //path=/  设置cookie适用根目录;httpOnly只允许服务端修改
+                //res.setHeader('Set-Cookie',`username=${data.username}; path=/; httpOnly; expires=${getCookieExpires}`)  //path=/  设置cookie适用根目录;httpOnly只允许服务端修改
 
 
                 return new SuccessModel()
