@@ -1,0 +1,3 @@
+安装 http-server 模块，加载静态资源
+
+http-server -p 8001
