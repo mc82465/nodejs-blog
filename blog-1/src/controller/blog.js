@@ -1,6 +1,8 @@
 
 const {exec} = require('../db/mysql')
 
+const xss = require('xss');
+
 const getList= (author,keyword) => {
     //假数据,格式
     /* return [
@@ -53,8 +55,8 @@ const getDetail= (id) => {
 
 const newBlog = (blogData={}) =>{
     //博客对象包含title,content...
-    const title = blogData.title;
-    const content = blogData.content;
+    const title = xss(blogData.title);          //防止xss攻击，主要script脚本<,>号，要转义特殊符号
+    const content = xss(blogData.content);
     const author = blogData.author;
     const createTime = Date.now();
 
@@ -73,8 +75,8 @@ const newBlog = (blogData={}) =>{
 }
 
 const updateBlog = (id,blogData={}) =>{
-    const title = blogData.title;
-    const content = blogData.content;
+    const title = xss(blogData.title);
+    const content = xss(blogData.content);
 
     const sql = `
         update blogs set title = '${title}', content = '${content}' where id=${id}
